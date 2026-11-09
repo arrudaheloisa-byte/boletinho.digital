@@ -77,10 +77,18 @@ const tabelaCorpo = document.getElementById("tabela-corpo");
 
 // INICIALIZAÇÃO E EVENTOS
 document.addEventListener("DOMContentLoaded", () => {
-  if (formLogin) formLogin.addEventListener("submit", handleLogin);
-  if (btnAlterarDados) btnAlterarDados.addEventListener("click", abrirPainelEdicao);
-  if (btnCancelarEdicao) btnCancelarEdicao.addEventListener("click", fecharPainelEdicao);
-  if (formEdicao) formEdicao.addEventListener("submit", handleSalvarEdicao);
+  if (formLogin) {
+    formLogin.addEventListener("submit", handleLogin);
+  }
+  if (btnAlterarDados) {
+    btnAlterarDados.addEventListener("click", abrirPainelEdicao);
+  }
+  if (btnCancelarEdicao) {
+    btnCancelarEdicao.addEventListener("click", fecharPainelEdicao);
+  }
+  if (formEdicao) {
+    formEdicao.addEventListener("submit", handleSalvarEdicao);
+  }
 });
 
 // FUNÇÕES DE LOGIN E CONEXÃO COM A API
@@ -230,73 +238,4 @@ function renderizarBoletim() {
     infoDiv.className = "card-info";
 
     const trimestres = ["1º Trimestre", "2º Trimestre", "3º Trimestre"];
-    item.notas.forEach((nota, index) => {
-      const linha = document.createElement("div");
-      linha.className = "card-linha";
-      
-      const rotulo = document.createElement("span");
-      rotulo.textContent = `${trimestres[index]}:`;
-      
-      const valor = document.createElement("span");
-      valor.textContent = `${formatarNota(nota)} (Faltas: ${item.faltas[index] || 0})`;
-      
-      linha.appendChild(rotulo);
-      linha.appendChild(valor);
-      infoDiv.appendChild(linha);
-    });
-
-    const linhaMedia = document.createElement("div");
-    linhaMedia.className = "card-linha";
-    const rotuloMedia = document.createElement("span");
-    rotuloMedia.textContent = "Média Final:";
-    const valorMedia = document.createElement("strong");
-    valorMedia.textContent = formatarNota(media);
-    linhaMedia.appendChild(rotuloMedia);
-    linhaMedia.appendChild(valorMedia);
-    infoDiv.appendChild(linhaMedia);
-
-    card.appendChild(infoDiv);
-
-    const statusDiv = document.createElement("div");
-    statusDiv.className = `card-status ${situacao.classe}`;
-    statusDiv.textContent = situacao.texto;
-    card.appendChild(statusDiv);
-
-    gridDisciplinas.appendChild(card);
-
-    // 2. RENDERIZAR LINHA DA TABELA
-    const tr = document.createElement("tr");
-
-    const tdNome = document.createElement("td");
-    tdNome.textContent = item.disciplina;
-    tr.appendChild(tdNome);
-
-    item.notas.forEach(nota => {
-      const tdNota = document.createElement("td");
-      tdNota.textContent = formatarNota(nota);
-      tr.appendChild(tdNota);
-    });
-
-    const tdMedia = document.createElement("td");
-    const strongMedia = document.createElement("strong");
-    strongMedia.textContent = formatarNota(media);
-    tdMedia.appendChild(strongMedia);
-    tr.appendChild(tdMedia);
-
-    const tdFaltas = document.createElement("td");
-    tdFaltas.textContent = totalFaltas;
-    tr.appendChild(tdFaltas);
-
-    const tdSituacao = document.createElement("td");
-    tdSituacao.textContent = situacao.texto;
-    tdSituacao.className = situacao.classe;
-    tr.appendChild(tdSituacao);
-
-    tabelaCorpo.appendChild(tr);
-  });
-}
-
-// PAINEL DE EDIÇÃO E VALIDAÇÕES
-function abrirPainelEdicao() {
-  containerCamposEdicao.innerHTML = "";
-  exibirMensagem(edicao
+    item.notas.
