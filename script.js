@@ -77,7 +77,52 @@ const tabelaCorpo = document.getElementById("tabela-corpo");
 
 // INICIALIZAÇÃO E EVENTOS
 document.addEventListener("DOMContentLoaded", () => {
-  formLogin.addEventListener("submit", handleLogin);
-  btnAlterarDados.addEventListener("click", abrirPainelEdicao);
-  btnCancelarEdicao.addEventListener("click", fecharPainelEdicao);
-  formEdicao.addEventListener("submit", handleSalvarEdicao);
+  if (formLogin) formLogin.addEventListener("submit", handleLogin);
+  if (btnAlterarDados) btnAlterarDados.addEventListener("click", abrirPainelEdicao);
+  if (btnCancelarEdicao) btnCancelarEdicao.addEventListener("click", fecharPainelEdicao);
+  if (formEdicao) formEdicao.addEventListener("submit", handleSalvarEdicao);
+});
+
+// FUNÇÕES DE LOGIN E CONEXÃO COM A API
+async function handleLogin(e) {
+  e.preventDefault();
+  const pinDigitado = pinInput.value.trim();
+
+  if (!pinDigitado) {
+    exibirMensagem(loginMensagem, "Por favor, digite seu PIN.", "erro");
+    return;
+  }
+
+  exibirMensagem(loginMensagem, "Conectando...", "info");
+
+  try {
+    const response = await fetch(`${CONFIG_ALUNO.apiUrl}/api/v1/boletins/abrir`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        turma: CONFIG_ALUNO.turma,
+        numero_chamada: CONFIG_ALUNO.numeroChamada,
+        pin: pinDigitado
+      })
+    });
+
+    if (response.status === 401) {
+      exibirMensagem(loginMensagem, "Turma, chamada ou PIN inválidos.", "erro");
+      return;
+    }
+
+    if (response.status === 429) {
+      exibirMensagem(loginMensagem, "Muitas tentativas. Aguarde um minuto e tente novamente.", "erro");
+      return;
+    }
+
+    if (!response.ok) {
+      exibirMensagem(loginMensagem, "Não foi possível conectar ao servidor. Tente novamente.", "erro");
+      return;
+    }
+
+    const data = await response.json();
+
+    // SUCESSO NO LOGIN: Guardar PIN apenas em memória e limpar o input
+    pinSessao = pinDigitado;
+    pinInput.
