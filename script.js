@@ -76,7 +76,7 @@ const gridDisciplinas = document.getElementById("grid-disciplinas");
 const tabelaCorpo = document.getElementById("tabela-corpo");
 
 // INICIALIZAÇÃO E EVENTOS
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function() {
   if (formLogin) {
     formLogin.addEventListener("submit", handleLogin);
   }
@@ -171,35 +171,45 @@ function normalizarFalta(val) {
 }
 
 function normalizarDadosAPI(listaDisciplinas) {
-  return listaDisciplinas.map(item => ({
-    disciplina: item.disciplina || item.nome || "Disciplina",
-    notas: [
-      normalizarNota(item.notas ? item.notas[0] : item.nota1),
-      normalizarNota(item.notas ? item.notas[1] : item.nota2),
-      normalizarNota(item.notas ? item.notas[2] : item.nota3)
-    ],
-    faltas: [
-      normalizarFalta(item.faltas ? item.faltas[0] : item.falta1),
-      normalizarFalta(item.faltas ? item.faltas[1] : item.falta2),
-      normalizarFalta(item.faltas ? item.faltas[2] : item.falta3)
-    ]
-  }));
+  return listaDisciplinas.map(function(item) {
+    return {
+      disciplina: item.disciplina || item.nome || "Disciplina",
+      notas: [
+        normalizarNota(item.notas ? item.notas[0] : item.nota1),
+        normalizarNota(item.notas ? item.notas[1] : item.nota2),
+        normalizarNota(item.notas ? item.notas[2] : item.nota3)
+      ],
+      faltas: [
+        normalizarFalta(item.faltas ? item.faltas[0] : item.falta1),
+        normalizarFalta(item.faltas ? item.faltas[1] : item.falta2),
+        normalizarFalta(item.faltas ? item.faltas[2] : item.falta3)
+      ]
+    };
+  });
 }
 
 // CÁLCULOS E REGRAS DE NEGÓCIO
 function calcularMedia(notas) {
-  const notasValidas = notas.filter(n => n !== null && !isNaN(n));
+  const notasValidas = notas.filter(function(n) {
+    return n !== null && !isNaN(n);
+  });
   if (notasValidas.length === 0) return null;
-  const soma = notasValidas.reduce((acc, curr) => acc + curr, 0);
+  const soma = notasValidas.reduce(function(acc, curr) {
+    return acc + curr;
+  }, 0);
   return soma / notasValidas.length;
 }
 
 function calcularTotalFaltas(faltas) {
-  return faltas.reduce((acc, curr) => acc + (parseInt(curr, 10) || 0), 0);
+  return faltas.reduce(function(acc, curr) {
+    return acc + (parseInt(curr, 10) || 0);
+  }, 0);
 }
 
 function obterSituacao(media, notas) {
-  const possuiTodasNotas = notas.every(n => n !== null);
+  const possuiTodasNotas = notas.every(function(n) {
+    return n !== null;
+  });
   if (media === null) return { texto: "Em Andamento", classe: "status-em-andamento" };
   
   if (media >= 6.0) {
@@ -221,7 +231,7 @@ function renderizarBoletim() {
   gridDisciplinas.innerHTML = "";
   tabelaCorpo.innerHTML = "";
 
-  dadosBoletim.forEach(item => {
+  dadosBoletim.forEach(function(item) {
     const media = calcularMedia(item.notas);
     const totalFaltas = calcularTotalFaltas(item.faltas);
     const situacao = obterSituacao(media, item.notas);
@@ -238,4 +248,88 @@ function renderizarBoletim() {
     infoDiv.className = "card-info";
 
     const trimestres = ["1º Trimestre", "2º Trimestre", "3º Trimestre"];
-    item.notas.
+    item.notas.forEach(function(nota, index) {
+      const linha = document.createElement("div");
+      linha.className = "card-linha";
+      
+      const rotulo = document.createElement("span");
+      rotulo.textContent = `${trimestres[index]}:`;
+      
+      const valor = document.createElement("span");
+      valor.textContent = `${formatarNota(nota)} (Faltas: ${item.faltas[index] || 0})`;
+      
+      linha.appendChild(rotulo);
+      linha.appendChild(valor);
+      infoDiv.appendChild(linha);
+    });
+
+    const linhaMedia = document.createElement("div");
+    linhaMedia.className = "card-linha";
+    const rotuloMedia = document.createElement("span");
+    rotuloMedia.textContent = "Média Final:";
+    const valorMedia = document.createElement("strong");
+    valorMedia.textContent = formatarNota(media);
+    linhaMedia.appendChild(rotuloMedia);
+    linhaMedia.appendChild(valorMedia);
+    infoDiv.appendChild(linhaMedia);
+
+    card.appendChild(infoDiv);
+
+    const statusDiv = document.createElement("div");
+    statusDiv.className = `card-status ${situacao.classe}`;
+    statusDiv.textContent = situacao.texto;
+    card.appendChild(statusDiv);
+
+    gridDisciplinas.appendChild(card);
+
+    // 2. RENDERIZAR LINHA DA TABELA
+    const tr = document.createElement("tr");
+
+    const tdNome = document.createElement("td");
+    tdNome.textContent = item.disciplina;
+    tr.appendChild(tdNome);
+
+    item.notas.forEach(function(nota) {
+      const tdNota = document.createElement("td");
+      tdNota.textContent = formatarNota(nota);
+      tr.appendChild(tdNota);
+    });
+
+    const tdMedia = document.createElement("td");
+    const strongMedia = document.createElement("strong");
+    strongMedia.textContent = formatarNota(media);
+    tdMedia.appendChild(strongMedia);
+    tr.appendChild(tdMedia);
+
+    const tdFaltas = document.createElement("td");
+    tdFaltas.textContent = totalFaltas;
+    tr.appendChild(tdFaltas);
+
+    const tdSituacao = document.createElement("td");
+    tdSituacao.textContent = situacao.texto;
+    tdSituacao.className = situacao.classe;
+    tr.appendChild(tdSituacao);
+
+    tabelaCorpo.appendChild(tr);
+  });
+}
+
+// PAINEL DE EDIÇÃO E VALIDAÇÕES
+function abrirPainelEdicao() {
+  containerCamposEdicao.innerHTML = "";
+  exibirMensagem(edicaoMensagem, "", "");
+
+  dadosBoletim.forEach(function(item, dIdx) {
+    const bloco = document.createElement("div");
+    bloco.className = "grid-edicao-disciplina";
+
+    const titulo = document.createElement("h4");
+    titulo.textContent = item.disciplina;
+    bloco.appendChild(titulo);
+
+    const camposGrid = document.createElement("div");
+    camposGrid.className = "campos-trimestres";
+
+    for (let t = 0; t < 3; t++) {
+      // Campo Nota
+      const
