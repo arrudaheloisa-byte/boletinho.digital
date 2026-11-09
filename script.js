@@ -58,7 +58,7 @@ const DADOS_LOCAIS = [
   }
 ];
 
-// ELEMANTOS DO DOM
+// ELEMENTOS DO DOM
 const loginContainer = document.getElementById("login-container");
 const boletimConteudo = document.getElementById("boletim-conteudo");
 const formLogin = document.getElementById("form-login");
@@ -125,4 +125,178 @@ async function handleLogin(e) {
 
     // SUCESSO NO LOGIN: Guardar PIN apenas em memória e limpar o input
     pinSessao = pinDigitado;
-    pinInput.
+    pinInput.value = "";
+    exibirMensagem(loginMensagem, "", "");
+
+    // Tratamento dos dados retornados
+    if (data && data.dados && Array.isArray(data.dados.disciplinas) && data.dados.disciplinas.length > 0) {
+      dadosBoletim = normalizarDadosAPI(data.dados.disciplinas);
+    } else {
+      dadosBoletim = JSON.parse(JSON.stringify(DADOS_LOCAIS));
+    }
+
+    // Exibe a tela principal do boletim
+    loginContainer.classList.add("oculto");
+    boletimConteudo.classList.remove("oculto");
+    renderizarBoletim();
+    atualizarGraficos();
+
+  } catch (error) {
+    exibirMensagem(loginMensagem, "Não foi possível conectar ao servidor. Tente novamente.", "erro");
+  }
+}
+
+// NORMALIZAÇÃO DE DADOS (API E LOCAIS)
+function normalizarNota(val) {
+  if (val === null || val === undefined || val === "") return null;
+  if (typeof val === "string") val = val.replace(",", ".");
+  let num = parseFloat(val);
+  if (isNaN(num)) return null;
+  if (num > 10 && num <= 100) num = num / 10;
+  return num;
+}
+
+function normalizarFalta(val) {
+  if (val === null || val === undefined || val === "") return 0;
+  let num = parseInt(val, 10);
+  return isNaN(num) || num < 0 ? 0 : num;
+}
+
+function normalizarDadosAPI(listaDisciplinas) {
+  return listaDisciplinas.map(item => ({
+    disciplina: item.disciplina || item.nome || "Disciplina",
+    notas: [
+      normalizarNota(item.notas ? item.notas[0] : item.nota1),
+      normalizarNota(item.notas ? item.notas[1] : item.nota2),
+      normalizarNota(item.notas ? item.notas[2] : item.nota3)
+    ],
+    faltas: [
+      normalizarFalta(item.faltas ? item.faltas[0] : item.falta1),
+      normalizarFalta(item.faltas ? item.faltas[1] : item.falta2),
+      normalizarFalta(item.faltas ? item.faltas[2] : item.falta3)
+    ]
+  }));
+}
+
+// CÁLCULOS E REGRAS DE NEGÓCIO
+function calcularMedia(notas) {
+  const notasValidas = notas.filter(n => n !== null && !isNaN(n));
+  if (notasValidas.length === 0) return null;
+  const soma = notasValidas.reduce((acc, curr) => acc + curr, 0);
+  return soma / notasValidas.length;
+}
+
+function calcularTotalFaltas(faltas) {
+  return faltas.reduce((acc, curr) => acc + (parseInt(curr, 10) || 0), 0);
+}
+
+function obterSituacao(media, notas) {
+  const possuiTodasNotas = notas.every(n => n !== null);
+  if (media === null) return { texto: "Em Andamento", classe: "status-em-andamento" };
+  
+  if (media >= 6.0) {
+    return { texto: "Aprovado", classe: "status-aprovado" };
+  } else if (!possuiTodasNotas) {
+    return { texto: "Em Andamento", classe: "status-em-andamento" };
+  } else {
+    return { texto: "Reprovado", classe: "status-reprovado" };
+  }
+}
+
+function formatarNota(val) {
+  if (val === null || val === undefined || isNaN(val)) return "-";
+  return Number(val).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+// RENDERIZAÇÃO SEGURA DO DOM (PREVENINDO DUPLICAÇÃO)
+function renderizarBoletim() {
+  gridDisciplinas.innerHTML = "";
+  tabelaCorpo.innerHTML = "";
+
+  dadosBoletim.forEach(item => {
+    const media = calcularMedia(item.notas);
+    const totalFaltas = calcularTotalFaltas(item.faltas);
+    const situacao = obterSituacao(media, item.notas);
+
+    // 1. RENDERIZAR CARD DA DISCIPLINA
+    const card = document.createElement("div");
+    card.className = "card-disciplina";
+
+    const title = document.createElement("h3");
+    title.textContent = item.disciplina;
+    card.appendChild(title);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "card-info";
+
+    const trimestres = ["1º Trimestre", "2º Trimestre", "3º Trimestre"];
+    item.notas.forEach((nota, index) => {
+      const linha = document.createElement("div");
+      linha.className = "card-linha";
+      
+      const rotulo = document.createElement("span");
+      rotulo.textContent = `${trimestres[index]}:`;
+      
+      const valor = document.createElement("span");
+      valor.textContent = `${formatarNota(nota)} (Faltas: ${item.faltas[index] || 0})`;
+      
+      linha.appendChild(rotulo);
+      linha.appendChild(valor);
+      infoDiv.appendChild(linha);
+    });
+
+    const linhaMedia = document.createElement("div");
+    linhaMedia.className = "card-linha";
+    const rotuloMedia = document.createElement("span");
+    rotuloMedia.textContent = "Média Final:";
+    const valorMedia = document.createElement("strong");
+    valorMedia.textContent = formatarNota(media);
+    linhaMedia.appendChild(rotuloMedia);
+    linhaMedia.appendChild(valorMedia);
+    infoDiv.appendChild(linhaMedia);
+
+    card.appendChild(infoDiv);
+
+    const statusDiv = document.createElement("div");
+    statusDiv.className = `card-status ${situacao.classe}`;
+    statusDiv.textContent = situacao.texto;
+    card.appendChild(statusDiv);
+
+    gridDisciplinas.appendChild(card);
+
+    // 2. RENDERIZAR LINHA DA TABELA
+    const tr = document.createElement("tr");
+
+    const tdNome = document.createElement("td");
+    tdNome.textContent = item.disciplina;
+    tr.appendChild(tdNome);
+
+    item.notas.forEach(nota => {
+      const tdNota = document.createElement("td");
+      tdNota.textContent = formatarNota(nota);
+      tr.appendChild(tdNota);
+    });
+
+    const tdMedia = document.createElement("td");
+    const strongMedia = document.createElement("strong");
+    strongMedia.textContent = formatarNota(media);
+    tdMedia.appendChild(strongMedia);
+    tr.appendChild(tdMedia);
+
+    const tdFaltas = document.createElement("td");
+    tdFaltas.textContent = totalFaltas;
+    tr.appendChild(tdFaltas);
+
+    const tdSituacao = document.createElement("td");
+    tdSituacao.textContent = situacao.texto;
+    tdSituacao.className = situacao.classe;
+    tr.appendChild(tdSituacao);
+
+    tabelaCorpo.appendChild(tr);
+  });
+}
+
+// PAINEL DE EDIÇÃO E VALIDAÇÕES
+function abrirPainelEdicao() {
+  containerCamposEdicao.innerHTML = "";
+  exibirMensagem(edicao
