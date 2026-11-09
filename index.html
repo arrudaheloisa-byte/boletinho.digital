@@ -3,71 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boletim Digital - 8º Ano</title>
+  <title>Boletim Escolar Digital</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <!-- Cabeçalho do Boletim -->
-    <header class="cabecalho">
-      <h1>Boletim Digital</h1>
-      <p class="subtitulo">8º Ano — Ensino Fundamental</p>
-      <p class="aluno-info">Estudante: <strong>Estudante Exemplo</strong></p>
-    </header>
+  <header>
+    <h1>Boletim Escolar Digital</h1>
+    <p>Acompanhamento de Desempenho Acadêmico</p>
+  </header>
 
-    <!-- Área Superior: Cards de Resumo -->
-    <section class="cards-resumo">
-      <div class="card">
-        <h3>Média Geral</h3>
-        <p id="card-media-geral" class="valor-card">—</p>
-      </div>
+  <main class="container">
 
-      <div class="card">
-        <h3>Total de Faltas</h3>
-        <p id="card-total-faltas" class="valor-card">—</p>
+    <!-- ÁREA DE LOGIN COM PIN -->
+    <section id="login-container" class="card-login">
+      <h2>Acesso ao Boletim</h2>
+      <div class="info-aluno-login">
+        <p><strong>Série:</strong> 8º Ano</p>
+        <p><strong>Turma:</strong> 8B</p>
+        <p><strong>Nº Chamada:</strong> 13</p>
       </div>
-
-      <div class="card">
-        <h3>Bom Desempenho</h3>
-        <p id="card-bom-desempenho" class="valor-card">—</p>
-      </div>
-
-      <div class="card">
-        <h3>Precisa de Atenção</h3>
-        <p id="card-atencao" class="valor-card">—</p>
-      </div>
-
-      <div class="card">
-        <h3>Frequência Geral</h3>
-        <p id="card-frequencia" class="valor-card">92%</p>
-        <span class="status-frequencia">Frequência adequada</span>
-      </div>
+      <form id="form-login">
+        <div class="campo-login">
+          <label for="pin-input">Digite seu PIN:</label>
+          <input type="password" id="pin-input" maxlength="10" placeholder="Digite seu PIN" required autocomplete="off">
+        </div>
+        <button type="submit" id="btn-entrar" class="btn-acao">Entrar</button>
+      </form>
+      <div id="login-mensagem" class="mensagem-status"></div>
     </section>
 
-    <!-- Área da Tabela de Notas -->
-    <main class="secao-tabela">
-      <h2>Notas e Frequência por Disciplina</h2>
-      <div class="tabela-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Disciplina</th>
-              <th>1º Tri</th>
-              <th>2º Tri</th>
-              <th>3º Tri</th>
-              <th>Média</th>
-              <th>Faltas</th>
-              <th>Situação</th>
-            </tr>
-          </thead>
-          <tbody id="corpo-tabela">
-            <!-- As linhas com as disciplinas serão inseridas aqui pelo JavaScript -->
-          </tbody>
-        </table>
-      </div>
-    </main>
-  </div>
+    <!-- CONTEÚDO DO BOLETIM (INICIALMENTE OCULTO) -->
+    <div id="boletim-conteudo" class="oculto">
+
+      <!-- CABEÇALHO COM DADOS DO ALUNO E BOTÃO ALTERAR -->
+      <section class="card-aluno-header">
+        <div class="aluno-info-painel">
+          <h2>Estudante: <span id="aluno-nome">Aluno 13</span></h2>
+          <p><strong>Turma:</strong> 8B | <strong>Nº:</strong> 13 | <strong>Ano Letivo:</strong> 2026</p>
+        </div>
+        <div class="aluno-acoes">
+          <button id="btn-alterar-dados" class="btn-acao">Alterar dados</button>
+        </div>
+      </section>
+
+      <!-- PAINEL DE EDIÇÃO DAS NOTAS/FALTAS (INICIALMENTE OCULTO) -->
+      <section id="painel-edicao" class="card-edicao oculto">
+        <h3>Editar Notas e Faltas</h3>
+        <p class="instrucoes-edicao">Digite notas de 0 a 10 (ou deixe em branco para sem nota) e faltas inteiras (≥ 0).</p>
+        
+        <form id="form-edicao">
+          <div id="container-campos-edicao"></div>
+          
+          <div id="edicao-mensagem" class="mensagem-status"></div>
+
+          <div class="botoes-edicao">
+            <button type="button" id="btn-cancelar-edicao" class="btn-secundario">Cancelar</button>
+            <button type="submit" id="btn-salvar-dados" class="btn-acao">Salvar alterações</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- SEÇÃO DE CARDS DAS DISCIPLINAS -->
+      <section>
+        <h2 class="titulo-secao">Disciplinas</h2>
+        <div class="grid-container" id="grid-disciplinas"></div>
+      </section>
+
+      <!-- SEÇÃO DA TABELA RESUMO -->
+      <section class="tabela-container">
+        <h2 class="titulo-secao">Resumo Geral de Desempenho</h2>
+        <div class="tabela-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Disciplina</th>
+                <th>1º Trim.</th>
+                <th>2º Trim.</th>
+                <th>3º Trim.</th>
+                <th>Média Final</th>
+                <th>Faltas</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-corpo"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Boletim Digital - Sistema de Gestão Escolar</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

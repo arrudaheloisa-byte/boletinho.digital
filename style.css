@@ -1,162 +1,421 @@
-/* Configurações gerais e reset simples */
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #6366f1;
+  --accent-hover: #4f46e5;
+  --success-color: #22c55e;
+  --warning-color: #eab308;
+  --danger-color: #ef4444;
+  --border-color: #475569;
+}
+
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: #f4f6f9;
-  color: #333333;
-  padding: 20px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Container principal para centralizar o conteúdo */
+header {
+  background-color: var(--bg-secondary);
+  padding: 2rem 1rem;
+  text-align: center;
+  border-bottom: 2px solid var(--accent-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 2.2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
 .container {
-  max-width: 1100px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  padding: 25px;
-  border-radius: 4px;
-  border: 1px solid #dcdcdc;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  flex: 1;
+  width: 100%;
 }
 
-/* Cabeçalho estilo clássico escolar */
-.cabecalho {
-  text-align: center;
-  border-bottom: 2px solid #002b5b; /* Azul escuro principal */
-  padding-bottom: 15px;
-  margin-bottom: 25px;
+.oculto {
+  display: none !important;
 }
 
-.cabecalho h1 {
-  color: #002b5b;
-  font-size: 2rem;
-  margin-bottom: 5px;
-}
-
-.subtitulo {
-  color: #555555;
-  font-size: 1.1rem;
-  font-weight: bold;
-}
-
-.aluno-info {
-  margin-top: 8px;
-  color: #444444;
-}
-
-/* Layout dos Cards de Resumo */
-.cards-resumo {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-/* Estilo individual do card (bordas finas e discretas) */
-.card {
-  background-color: #eaf2f8; /* Azul claro secundário */
-  border: 1px solid #b0c4de;
-  border-radius: 4px;
-  padding: 15px;
+/* CARD DE LOGIN */
+.card-login {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 2.5rem;
+  max-width: 420px;
+  margin: 3rem auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
   text-align: center;
 }
 
-.card h3 {
-  font-size: 0.9rem;
-  color: #002b5b;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+.card-login h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
 }
 
-.valor-card {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #111111;
+.info-aluno-login {
+  background-color: var(--bg-card);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
-.status-frequencia {
+.info-aluno-login p {
+  margin-bottom: 0.3rem;
+  color: var(--text-secondary);
+}
+
+.info-aluno-login p strong {
+  color: var(--text-primary);
+}
+
+.campo-login {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.campo-login label {
   display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.campo-login input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.campo-login input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* BOTÕES GERAIS */
+.btn-acao {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  width: 100%;
+}
+
+.btn-acao:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn-acao:active {
+  transform: scale(0.98);
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secundario:hover {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* MENSAGENS DE STATUS */
+.mensagem-status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  min-height: 1.2rem;
+  word-break: break-word;
+}
+
+.mensagem-status.erro {
+  color: var(--danger-color);
+}
+
+.mensagem-status.sucesso {
+  color: var(--success-color);
+}
+
+.mensagem-status.info {
+  color: var(--warning-color);
+}
+
+/* CABEÇALHO DO ALUNO */
+.card-aluno-header {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.aluno-info-painel h2 {
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.aluno-info-painel p {
+  color: var(--text-secondary);
+}
+
+.aluno-acoes {
+  min-width: 160px;
+}
+
+/* PAINEL DE EDIÇÃO */
+.card-edicao {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 2px solid var(--accent-color);
+}
+
+.card-edicao h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.instrucoes-edicao {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.grid-edicao-disciplina {
+  background-color: var(--bg-card);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.grid-edicao-disciplina h4 {
+  margin-bottom: 0.8rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.4rem;
+}
+
+.campos-trimestres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.grupo-campo label {
   font-size: 0.8rem;
-  color: #2e7d32;
-  margin-top: 4px;
-  font-weight: bold;
+  color: var(--text-secondary);
 }
 
-/* Seção da Tabela */
-.secao-tabela h2 {
-  color: #002b5b;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
+.grupo-campo input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
-/* Deixa a tabela responsiva em telas pequenas */
+.grupo-campo input.campo-invalido {
+  border-color: var(--danger-color);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.botoes-edicao {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.botoes-edicao button {
+  width: auto;
+}
+
+/* GRID DE CARDS DAS DISCIPLINAS */
+.titulo-secao {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.card-disciplina {
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-disciplina h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.card-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.card-linha span:first-child {
+  color: var(--text-secondary);
+}
+
+.card-status {
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.status-aprovado {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: var(--success-color);
+}
+
+.status-em-andamento {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: var(--warning-color);
+}
+
+.status-reprovado {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--danger-color);
+}
+
+/* TABELA */
 .tabela-container {
+  margin-bottom: 3rem;
+}
+
+.tabela-responsive {
+  width: 100%;
   overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 th, td {
-  padding: 12px;
-  border: 1px solid #dcdcdc;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
 }
 
 th {
-  background-color: #002b5b;
-  color: #ffffff;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
   font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
 }
 
-/* Efeito zebrado nas linhas da tabela */
-tbody tr:nth-child(even) {
-  background-color: #f9fbfd;
+td {
+  color: var(--text-secondary);
+}
+
+td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 tbody tr:hover {
-  background-color: #f0f4f8;
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
-/* Estilos visuais para as situações */
-.situacao-bom {
-  color: #2e7d32;
-  font-weight: bold;
+footer {
+  background-color: var(--bg-secondary);
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
 }
 
-.situacao-atencao {
-  color: #c62828;
-  font-weight: bold;
-}
-
-.situacao-indisponivel {
-  color: #757575;
-  font-style: italic;
-}
-
-/* Ajustes para telas pequenas (Celular) */
 @media (max-width: 600px) {
-  body {
-    padding: 10px;
+  .card-aluno-header {
+    flex-direction: column;
+    align-items: stretch;
   }
-
-  .container {
-    padding: 15px;
-  }
-
-  .cabecalho h1 {
-    font-size: 1.5rem;
-  }
-
-  th, td {
-    padding: 8px;
-    font-size: 0.85rem;
+  .aluno-acoes button {
+    width: 100%;
   }
 }
