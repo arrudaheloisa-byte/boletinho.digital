@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boletim Escolar Digital</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -68,6 +69,38 @@
       <section>
         <h2 class="titulo-secao">Disciplinas</h2>
         <div class="grid-container" id="grid-disciplinas"></div>
+      </section>
+
+      <!-- ÁREA VISUAL DOS GRÁFICOS -->
+      <section class="secao-graficos">
+        <h2 class="titulo-secao">Análise Visual de Desempenho</h2>
+        <div class="area-graficos">
+          
+          <article class="grafico-card">
+            <h3>Média por disciplina</h3>
+            <div class="grafico-container">
+              <canvas id="graficoMediasDisciplinas"></canvas>
+            </div>
+          </article>
+
+          <article class="grafico-card">
+            <h3>Evolução da média geral</h3>
+            <div class="grafico-container">
+              <canvas id="graficoEvolucaoTrimestres"></canvas>
+            </div>
+          </article>
+
+          <article class="grafico-card" id="card-faltas">
+            <div class="header-card-faltas">
+              <h3>Faltas por trimestre</h3>
+              <span id="badge-perigo-faltas" class="badge-perigo oculto">Perigo</span>
+            </div>
+            <div class="grafico-container">
+              <canvas id="graficoFaltasTrimestres"></canvas>
+            </div>
+          </article>
+
+        </div>
       </section>
 
       <!-- SEÇÃO DA TABELA RESUMO -->
